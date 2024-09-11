@@ -80,8 +80,8 @@ public class UIManager : MonoBehaviour
     [Header("Quit Popup")]
     [SerializeField]
     private GameObject QuitPopup_Object;
-    [SerializeField]
-    private Button YesQuit_Button;
+    [SerializeField] private Button YesQuit_Button;
+    [SerializeField] private Button BonusQuit_Button;
     [SerializeField]
     private Button NoQuit_Button;
     [SerializeField]
@@ -118,13 +118,24 @@ public class UIManager : MonoBehaviour
 
     private bool isExit = false;
 
+    [SerializeField] private Button m_AwakeGameButton;
+
 
     private void Awake()
     {
-        if (Loading_Object) Loading_Object.SetActive(true);
-        StartCoroutine(LoadingRoutine());
+        // if (Loading_Object) Loading_Object.SetActive(true);
+        // StartCoroutine(LoadingRoutine());
+         SimulateClickByDefault();
     }
 
+  public void openQuitpopUp(){
+        OpenPopup(QuitPopup_Object);
+    }
+    private void SimulateClickByDefault()
+    {
+        Debug.Log("Awaken The Game...");
+        m_AwakeGameButton.onClick.Invoke();
+    }
     private IEnumerator LoadingRoutine()
     {
         float imageFill = 0f;
@@ -220,10 +231,10 @@ public class UIManager : MonoBehaviour
         if (NoQuit_Button) NoQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
 
         if (CrossQuit_Button) CrossQuit_Button.onClick.RemoveAllListeners();
-        if (CrossQuit_Button) CrossQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
+        if (CrossQuit_Button) CrossQuit_Button.onClick.AddListener(delegate { if(!isExit){ClosePopup(QuitPopup_Object);} });
 
         if (BackQuit_Button) BackQuit_Button.onClick.RemoveAllListeners();
-        if (BackQuit_Button) BackQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
+        if (BackQuit_Button) BackQuit_Button.onClick.AddListener(delegate { if(!isExit){ClosePopup(QuitPopup_Object);} });
 
         if (LBExit_Button) LBExit_Button.onClick.RemoveAllListeners();
         if (LBExit_Button) LBExit_Button.onClick.AddListener(delegate { ClosePopup(LBPopup_Object); });
@@ -234,8 +245,11 @@ public class UIManager : MonoBehaviour
         if (YesQuit_Button) YesQuit_Button.onClick.RemoveAllListeners();
         if (YesQuit_Button) YesQuit_Button.onClick.AddListener(CallOnExitFunction);
 
-        if (CloseAD_Button) CloseAD_Button.onClick.RemoveAllListeners();
-        if (CloseAD_Button) CloseAD_Button.onClick.AddListener(CallOnExitFunction);
+        if (YesQuit_Button) YesQuit_Button.onClick.RemoveAllListeners();
+        if (YesQuit_Button) YesQuit_Button.onClick.AddListener(CallOnExitFunction);
+
+        if (BonusQuit_Button) BonusQuit_Button.onClick.RemoveAllListeners();
+        if (BonusQuit_Button) BonusQuit_Button.onClick.AddListener(CallOnExitFunction);
 
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.RemoveAllListeners();
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.AddListener(CallOnExitFunction);
@@ -308,7 +322,7 @@ public class UIManager : MonoBehaviour
         isExit = true;
         audioController.PlayButtonAudio();
         slotManager.CallCloseSocket();
-        Application.ExternalCall("window.parent.postMessage", "onExit", "*");
+        // Application.ExternalCall("window.parent.postMessage", "onExit", "*");
     }
 
     internal void InitialiseUIData(string SupportUrl, string AbtImgUrl, string TermsUrl, string PrivacyUrl, Paylines symbolsText)

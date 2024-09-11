@@ -136,8 +136,10 @@ public class SlotBehaviour : MonoBehaviour
     internal bool CheckPopups = false;
     private int BetCounter = 0;
     private double currentBalance = 0;
+    internal double currentBet = 0;
     private double currentTotalBet = 0;
     internal bool IsHoldSpin = false;
+    private bool CheckSpinAudio = false;
 
     private Tweener WinTween;
     private void Start()
@@ -174,7 +176,9 @@ public class SlotBehaviour : MonoBehaviour
 
             IsAutoSpin = true;
             if (AutoSpinStop_Button) AutoSpinStop_Button.gameObject.SetActive(true);
-            if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(false);
+            // if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(false);
+            ToggleButtonGrp(false);
+
             if (AutoSpinRoutine != null)
             {
                 StopCoroutine(AutoSpinRoutine);
@@ -323,8 +327,11 @@ public class SlotBehaviour : MonoBehaviour
     #region Hold to auto spin
     internal void StartSpinRoutine()
     {
+        if(!IsSpinning){
         IsHoldSpin = false;
         Invoke("AutoSpinHold", 2f);
+        }
+
     }
 
     internal void StopSpinRoutine()
@@ -356,7 +363,7 @@ public class SlotBehaviour : MonoBehaviour
     {
         if (audioController) audioController.PlayButtonAudio();
 
-        if (TotalBet_text) TotalBet_text.text = "99999";
+        if (TotalBet_text) TotalBet_text.text = "";
     }
 
     //private void Update()
@@ -533,13 +540,7 @@ public class SlotBehaviour : MonoBehaviour
 
     private void OnApplicationFocus(bool focus)
     {
-        if (focus)
-        {
-            if (!IsSpinning)
-            {
-                if (audioController) audioController.StopWLAaudio();
-            }
-        }
+        if(audioController) audioController.CheckFocusFunction(focus,CheckSpinAudio);
     }
 
     [SerializeField]
@@ -551,6 +552,8 @@ public class SlotBehaviour : MonoBehaviour
     private IEnumerator TweenRoutine()
     {
         gambleController.GambleTweeningAnim(false);
+        currentBet = SocketManager.initialData.Bets[BetCounter];
+
         if (currentBalance < currentTotalBet)
         {
             CompareBalance();
@@ -558,8 +561,9 @@ public class SlotBehaviour : MonoBehaviour
             yield return new WaitForSeconds(1);
             yield break;
         }
-        if (audioController) audioController.PlayWLAudio("spin");
+        CheckSpinAudio = true;
         IsSpinning = true;
+        if (audioController) audioController.PlayWLAudio("spin");
         ToggleButtonGrp(false);
         for (int i = 0; i < numberOfSlots; i++)
         {
@@ -877,6 +881,8 @@ public class SlotBehaviour : MonoBehaviour
         {
             if (audioController) audioController.StopWLAaudio();
         }
+        CheckSpinAudio = false;
+
     }
 
     private void GenerateMatrix(int value)
