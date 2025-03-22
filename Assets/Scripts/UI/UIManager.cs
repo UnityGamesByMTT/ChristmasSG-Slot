@@ -238,7 +238,7 @@ public class UIManager : MonoBehaviour
         if (BonusQuit_Button) BonusQuit_Button.onClick.AddListener(CallOnExitFunction);
 
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.RemoveAllListeners();
-        if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.AddListener(CallOnExitFunction);
+        if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.AddListener(delegate { CallOnExitFunction(); socketManager.ReactNativeCallOnFailedToConnect(); }); //BackendChanges
 
         if (MegaWinHideBtn) MegaWinHideBtn.onClick.RemoveAllListeners();
         if (MegaWinHideBtn) MegaWinHideBtn.onClick.AddListener(OnClickMegaWinHide);
