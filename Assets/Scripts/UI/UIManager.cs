@@ -188,6 +188,17 @@ public class UIManager : MonoBehaviour
         if (paginationButtonGrp[3]) paginationButtonGrp[3].onClick.RemoveAllListeners();
         if (paginationButtonGrp[3]) paginationButtonGrp[3].onClick.AddListener(delegate { GoToPage(3); });
 
+
+        if (paginationButtonGrp[4]) paginationButtonGrp[4].onClick.RemoveAllListeners();
+        if (paginationButtonGrp[4]) paginationButtonGrp[4].onClick.AddListener(delegate { GoToPage(4); });
+
+        if (paginationButtonGrp[5]) paginationButtonGrp[5].onClick.RemoveAllListeners();
+        if (paginationButtonGrp[5]) paginationButtonGrp[5].onClick.AddListener(delegate { GoToPage(5); });
+
+       
+
+
+
         if (Infoback_button) Infoback_button.onClick.RemoveAllListeners();
         if (Infoback_button) Infoback_button.onClick.AddListener(delegate { ClosePopup(PaytablePopup_Object); });
 
